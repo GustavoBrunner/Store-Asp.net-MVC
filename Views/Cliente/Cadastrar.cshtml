@@ -1,0 +1,51 @@
+@model ClienteModel
+@{
+    if(Context.Request.RouteValues.ContainsKey("id"))
+        ViewBag.Subtitulo = "Alteração";
+    else
+        ViewBag.Subtitulo = "Cadastro";
+}
+
+<div class="container">
+    <form asp-action="Cadastrar">
+        <input type="hidden" asp-for="IdUsuario">
+        <div class="form-group col-sm-8 col-lg-4">
+            <label asp-for="Nome">Nome:</label>
+            <input type="text" asp-for="Nome">
+            <span asp-validation-for="Nome"></span>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-sm-8 col-lg-4">
+            <label asp-for="CPF">CPF:</label>
+            <input type="text" asp-for="CPF">
+            <span asp-validation-for="CPF"></span>
+        </div>
+        <div class="form-group col-sm-8 col-lg-4">
+            <label asp-for="DataNascimento">Data Nascimento:</label>
+            <input type="text" asp-for="DataNascimento">
+            <span asp-validation-for="DataNascimento"></span>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-sm-8 col-lg-4">
+            <label asp-for="Email">Email:</label>
+            <input type="email" asp-for="Email">
+            <span asp-validation-for="Email"></span>
+        </div>
+        
+        @if(!Context.Request.RouteValues.ContainsKey("id")){
+            /* Verificamos aqui se na rota da requisição NÃO existe um id. Se não existir um Id, significa
+            que é um cadastro novo, portanto mostramos a senha. Caso exista um id, não mostramos a senha,
+            pois senha é algo sensível que não pode ser alterado tão facilmente */
+            <div class="w-100"></div>
+            <div class="form-group col-sm-8 col-lg-4">
+                <label asp-for="Senha">Senha</label>
+                <input type="password" asp-for="Senha">
+                <span asp-validation-for="Senha"></span>
+            </div>
+        }
+        <div>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <button class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+</div>

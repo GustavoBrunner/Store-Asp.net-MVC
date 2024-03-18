@@ -1,0 +1,20 @@
+@model ItemPedidoModel
+
+@{
+    ViewBag.Subtitulo = "Exclusão";
+}
+<h1 class="text-primary">@ViewBag.Subtitulo</h1>
+<hr>
+<div class="container">
+    <form asp-action="Excluir" class="w-25">
+        <h1 class="text-danger">Deseja exluir o item: @Model?.Produto?.Nome?</h1>
+        <hr>
+        <input type="hidden" asp-for="IdPedido" name="ped">
+        <input type="hidden" asp-for="IdProduto" name="prod">
+        <div class="mt-3">
+            <a asp-action="Index" asp-route-ped="@Model?.IdPedido" 
+                class="btn btn-secondary">Cancelar</a>
+            <button class="btn btn-danger">Excluir</button>
+        </div>
+    </form>
+</div>

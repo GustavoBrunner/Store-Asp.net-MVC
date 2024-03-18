@@ -1,0 +1,48 @@
+@model List<ProdutoModel>
+@{
+    ViewBag.Subtitulo = "Listagem de Produtos";
+}
+<header class="d-flex justify-content-between align-tems-center">
+    <div>
+        <h1 class="text-primary">@ViewBag.Subtitulo</h1>
+    </div>
+    <div>
+        <a asp-action="Cadastrar" class="btn btn-primary">Novo Produto</a>
+    </div>
+</header>
+<partial name="_Mensagem"></partial>
+<!-- <partial name="_Mensagem"></partial> -->
+@if(Model.Count() > 0){
+    /* Aqui verificamos se a quantidade de categorias recebida é maior que 0, se sim, criamos a parte
+    de cima da tabela */
+    <table class="table table-striped tabela-produtos">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Estoque</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var produto in Model){
+                /* formatações de estoque para 4 dígitos "D4", e formatação do preço para valor monetário "C" -> Currency */
+                <tr>
+                    <td>@produto.Nome</td>
+                    <td>@produto.Categoria.Nome</td>
+                    <td>@produto.Estoque.ToString("D4")</td>
+                    <td>@produto.Preco.ToString("C")</td>
+                    <td>
+                        <a asp-action="Cadastrar" asp-route-id="@produto.IdProduto" class="btn
+                        btn-sm btn-secondary">Alterar</a>
+                        <a asp-action="Excluir" asp-route-id="@produto.IdProduto" class="btn
+                        btn-sm btn-danger">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else{
+    <p>Não há nenhuma categoria cadastrada!</p>
+}

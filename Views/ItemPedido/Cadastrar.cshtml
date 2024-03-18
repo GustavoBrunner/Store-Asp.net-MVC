@@ -1,0 +1,39 @@
+@model ItemPedidoModel
+@{
+    bool alteracao = Context.Request.Query.ContainsKey("prod");
+    if (alteracao)
+        ViewBag.Subtitulo = $"Alteração de item do pedido {Model.IdPedido:D4}";
+    else
+        ViewBag.Subtitulo = $"Cadastro de item do pedido {Model.IdPedido:D4}";
+}
+<h1 class="text-primary">@ViewBag.Subtitulo</h1>
+
+<div class="container">
+    <form asp-action="Cadastrar">
+        <input type="hidden" asp-for="IdPedido">
+        <input type="hidden" asp-for="ValorUnitario">
+        @if (alteracao)
+        {
+            <input type="hidden" asp-for="IdProduto">
+        }
+
+        <div class="form-group col-sm-8 col-lg-4">
+            <label asp-for="@Model.IdProduto">Categoria:</label><br>
+            <select asp-for="@Model.IdProduto" class="form-control"
+                asp-items="@(IEnumerable<SelectListItem>)ViewBag.Produtos" disabled="@alteracao"
+                autofocus="@(!alteracao)"></select>
+            <span asp-validation-for="@Model.IdProduto" class="text-danger"></span>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-2 col-lg-1">
+            <label asp-for="@Model.Quantidade">Quantidade:</label><br>
+            <input asp-for="@Model.Quantidade" class="form-control" autofocus="@alteracao">
+            <span asp-validation-for="@Model.Quantidade" class="text-danger"></span>
+        </div>
+        <div>
+            <a asp-action="Index" asp-route-ped="@Model.IdPedido" 
+                class="btn btn-secondary">Cancelar</a>
+            <button class="btn btn-primary" type="submit">Enviar</button>
+        </div>
+    </form>
+</div>

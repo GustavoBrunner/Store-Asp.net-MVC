@@ -1,0 +1,22 @@
+@model CategoriaModel
+@{
+    if(Context.Request.RouteValues.ContainsKey("id"))
+        ViewBag.Subtitulo = "Alteração";
+    else
+        ViewBag.Subtitulo = "Cadastro";
+}
+
+<div class="container">
+    <form asp-action="Cadastrar">
+        <input type="hidden" asp-for="IdCategoria">
+        <div>
+            <label asp-for="Nome">Nome:</label>
+            <input type="text" asp-for="Nome">
+            <span asp-validation-for="Nome"></span>
+        </div>
+        <div>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <button class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+</div>

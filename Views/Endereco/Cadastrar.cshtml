@@ -1,0 +1,75 @@
+@model EnderecoModel
+@{
+    var cliente = ViewBag.Cliente as ClienteModel;
+    if(Context.Request.RouteValues.ContainsKey("eid"))
+        ViewBag.Subtitulo = "Alteração de endereço";
+    else
+        ViewBag.Subtitulo = "Cadastro de endereço";
+}
+
+<div class="container">
+    <form asp-action="Cadastrar">
+        <input type="hidden" asp-for="IdEndereco">
+        <input type="hidden" value="@cliente.IdUsuario" name="IdUsuario" id="IdUsuario">
+
+        <div class="form-group">
+            <div class="col-sm-4 col-md-3 col-lg-2">
+                <label asp-for="@Model.CEP" class="control-label">CEP</label>
+                <span>(Somente Números!)</span>
+                <div class="input-group">
+                    <input asp-for="@Model.CEP" type="text" class="form-control" />
+                    <span class="input-group-text">
+                        <i class="spinner-border spinner-border-sm d-none" id="cep_loading"></i>
+                        <i class="bi-check-lg d-none fs-6" id="cep_checked"></i>
+                        <i class="bi-x-lg fs-b" id="cep_none"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <span class="text-muted d-block" id="endereco">Digite um CEP válido e aguarde</span>
+        <span asp-validation-for="@Model.CEP" class="text-danger"></span>
+        <input type="hidden" asp-for="@Model.Logradouro" value="">
+        <input type="hidden" asp-for="@Model.Bairro" value="">
+        <input type="hidden" asp-for="@Model.Cidade" value="">
+        <input type="hidden" asp-for="@Model.Estado" value="">
+
+        <div class="w-100"></div>
+
+        <div class="form-group col-sm-2 col-lg-1">
+            <label asp-for="@Model.Numero" class="control-label">Número</label>
+            <input type="text" asp-for="@Model.Numero" class="form-control">
+            <span asp-validation-for="@Model.Numero" class="tex-danger"></span>
+        </div>
+        <div class="w-100"></div>
+
+        <div class="form-group col-sm-6">
+            <label asp-for="@Model.Complemento" class="control-label">Complemento</label>
+            <span>(Opcional)</span>
+            <input type="text" asp-for="@Model.Complemento" class="form-control">
+            <span asp-validation-for="@Model.Complemento" class="tex-danger"></span>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-sm-6">
+            <label asp-for="@Model.Referencia" class="control-label">Referencia</label>
+            <span>(Opcional)</span>
+            <input type="text" asp-for="@Model.Referencia" class="form-control">
+            <span asp-validation-for="@Model.Referencia" class="tex-danger"></span>
+        </div>
+        <div class="w-100"></div>
+
+        <div class="form-group col-sm-6">
+            <input type="checkbox" asp-for="@Model.Selecionado">
+            <label asp-for="@Model.Selecionado">Tornar endereço padrão</label>
+            <span asp-validation-for="@Model.Selecionado" class="tex-danger"></span>
+        </div>
+
+        <div>
+            <a asp-action="Index" asp-route-cid="@cliente.IdUsuario" class="btn btn-outline-secondary">Cancelar</a>
+            <button class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+
+    @section Scripts{
+        @{await Html.RenderPartialAsync("_ConsultaCEP");}
+    }
+</div>

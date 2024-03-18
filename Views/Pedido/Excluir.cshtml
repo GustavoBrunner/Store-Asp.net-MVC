@@ -1,0 +1,36 @@
+@model PedidoModel 
+
+@{
+    ViewBag.Subtitulo = $"Exclusão de pedido {@Model.IdPedido:D4}";
+}
+<h1 class="text-primary">@ViewBag.Subtitulo</h1>
+<hr>
+<h6>Cliente: <b class="text-dark">@Model?.Cliente?.Nome</b></h6>
+@if(Model.DataEntrega.HasValue){
+    <h6>Endereço de entrega: @Model.EnderecoEntrega.EnderecoCompleto</h6>
+}
+<hr>
+@if(Model?.ItensPedido?.Count() > 0){
+    <h6>Itens deste pedido:</h6>
+    <hr>
+    @foreach(var item in Model.ItensPedido){
+        <h6>@item?.Produto?.Nome (@item.Quantidade x @item.ValorUnitario.ToString("C") 
+            = @item.ValorTotal.ToString("C"))</h6>
+    }
+    <hr>
+    <h6><b>Valor total do pedido: @Model.ValorTotal.Value.ToString("C")</b></h6>
+}
+else{
+
+}
+<div class="container">
+    <form asp-action="Excluir" class="w-25">
+        <h1 class="text-danger">Deseja exluir o pedido?</h1>
+        <hr>
+        <input type="hidden" asp-for="IdPedido">
+        <div class="mt-3">
+            <a asp-action="Index" asp-route-cid="@Model.IdCliente" class="btn btn-secondary">Cancelar</a>
+            <button class="btn btn-danger">Excluir</button>
+        </div>
+    </form>
+</div>

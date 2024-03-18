@@ -1,0 +1,51 @@
+@model IEnumerable<PedidoModel>
+@{
+    var cliente = ViewBag.Cliente as ClienteModel;
+    ViewBag.Subtitulo = $"Pedidos do cliente <b>{cliente.Nome}</b>";
+}
+<header class="d-flex justify-content-between align-tems-center">
+    <div>
+        <h1 class="text-primary">@Html.Raw(ViewBag.Subtitulo)</h1>
+    </div>
+    <div>
+        <a asp-action="Cadastrar" asp-route-cid="@cliente.IdUsuario" class="btn btn-primary">Novo Pedido</a>
+    </div>
+</header>
+<partial name="_Mensagem"></partial>
+<!-- <partial name="_Mensagem"></partial> -->
+@if(Model.Count() > 0){
+    /* Aqui verificamos se a quantidade de cedidos recebida é maior que 0, se sim, criamos a parte
+    de cima da tabela */
+    <table class="table table-striped tabela-pedidos">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Data/Hora Pedido</th>
+                <th>Valor Total</th>
+                <th>Data/Hora Entrega</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var pedido in Model){
+                <tr>
+                    <td>@pedido.IdPedido.ToString("D4")</td>
+                    <td>@(pedido.DataPedido.HasValue ? pedido.DataPedido : "Em aberto")</td>
+                    <td>@pedido.ValorTotal.Value.ToString("C")</td>
+                    <td>@(pedido.DataEntrega.HasValue ? pedido.DataEntrega : "Em aberto")</td>
+                    <td>
+                        
+                        <a asp-action="Index" asp-controller="ItemPedido" 
+                            asp-route-ped="@pedido.IdPedido" 
+                            class="btn btn-sm btn-secondary">Alterar pedido</a>
+                        <a asp-action="Excluir" asp-route-ped="@pedido.IdPedido" class="btn
+                        btn-sm btn-danger">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else{
+    <p>Não há nenhuma pedido cadastrado!</p>
+}

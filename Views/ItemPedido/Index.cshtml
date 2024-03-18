@@ -1,0 +1,85 @@
+@model IEnumerable<ItemPedidoModel>
+@{
+    var pedido = ViewBag.Pedido as PedidoModel;
+    ViewBag.Subtitulo = $"Itens do pedido? <b>{pedido?.IdPedido:D4}</b>";
+}
+<header class="d-flex justify-content-between align-tems-center">
+    <div>
+        <h1 class="text-primary">
+            @ViewBag.Subtitulo
+            @(pedido.DataPedido.HasValue ? "(Fechado)" : "")</h1>
+    </div>
+    @if(!pedido.DataPedido.HasValue){
+        <div>
+            <a asp-action="Cadastrar" asp-route-ped="@pedido.IdPedido" class="btn btn-primary">Novo Item</a>
+        </div>
+    }
+</header>
+<h5>Cliente: <b>@pedido?.Cliente?.Nome</b></h5>
+<hr>
+@if(pedido.DataEntrega.HasValue){
+    <h6>Endereço de entrega: @pedido?.EnderecoEntrega?.EnderecoCompleto</h6>
+    <hr>
+}
+<partial name="_Mensagem"></partial>
+<!-- <partial name="_Mensagem"></partial> -->
+@if(Model.Count() > 0){
+    /* Aqui verificamos se a quantidade de itempedidos recebida é maior que 0, se sim, criamos a parte
+    de cima da tabela */
+    <table class="table table-striped tabela-itempedidos">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Valor Unit</th>
+                <th>Qtde</th>
+                <th>Valor Item</th>
+                @if(!pedido.DataPedido.HasValue){
+                    <th>Ações</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var itempedido in Model){
+                <tr>
+                    <td>@itempedido?.Produto?.Nome</td>
+                    <td>@itempedido?.ValorUnitario.ToString("C")</td>
+                    <td>@itempedido?.Quantidade.ToString("D4")</td>
+                    <td>@itempedido?.ValorTotal.ToString("C")</td>
+                    <td>
+                        @if(!pedido.DataPedido.HasValue){
+                            <a asp-action="Cadastrar" asp-route-ped="@itempedido?.IdPedido" 
+                                asp-route-prod="@itempedido?.IdProduto" 
+                                class="btn btn-sm btn-secondary">Alterar</a>
+
+                            <a asp-action="Excluir" asp-route-ped="@itempedido?.IdPedido" 
+                                asp-route-prod="@itempedido?.IdProduto" 
+                                class="btn btn-sm btn-danger">Excluir</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-end"><b>Valor total:</b></td>
+                <td><b>@Model.Sum(i => i.ValorUnitario).ToString("C")</b></td>
+                @if (!pedido.DataPedido.HasValue)
+                {
+                    <td></td>
+                }
+            </tr>
+        </tfoot>
+    </table>
+}
+else{
+    <p>Não há nenhuma itempedido cadastrada!</p>
+}
+
+<div class="d-flex justify-content-end align-tems-center gap-2">
+    <a asp-action="Index" asp-controller="Pedido" asp-route-cid="@pedido.IdCliente" 
+        class="btn btn-outline-success">Alterar</a>
+    @if(!pedido.DataPedido.HasValue && pedido.ItensPedido.Count() > 0){
+        <a asp-action="Fechar" asp-controller="Pedido" asp-route-id="@pedido.IdPedido" 
+            class="btn btn-success">Alterar</a>
+    }
+</div>
